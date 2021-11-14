@@ -36,12 +36,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(186));
-const docs = ['Individuals and interactions over processes and tools'];
+const docs = [
+    'Individuals and interactions over processes and tools',
+    `Working software over comprehensive documentation`,
+    `Customer collaboration over contract negotiation`,
+    `Responding to change over following a plan`
+];
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            core.info(docs[0]);
-            core.setOutput('passage', docs[0]);
+            const passage = docs[Math.floor(Math.random() * docs.length)];
+            core.info(passage);
+            core.setOutput('passage', passage);
         }
         catch (error) {
             if (error instanceof Error)
