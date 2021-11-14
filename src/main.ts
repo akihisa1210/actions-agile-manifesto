@@ -1,16 +1,11 @@
 import * as core from '@actions/core'
-import {wait} from './wait'
+
+const docs = ['Individuals and interactions over processes and tools']
 
 async function run(): Promise<void> {
   try {
-    const ms: string = core.getInput('milliseconds')
-    core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
-
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
-
-    core.setOutput('time', new Date().toTimeString())
+    core.info(docs[0])
+    core.setOutput('passage', docs[0])
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
   }
