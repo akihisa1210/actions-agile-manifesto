@@ -36,16 +36,40 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(186));
+const supportedLangs = ['en', 'ja'];
 const docs = [
-    'Individuals and interactions over processes and tools',
-    `Working software over comprehensive documentation`,
-    `Customer collaboration over contract negotiation`,
-    `Responding to change over following a plan`
+    {
+        en: 'Individuals and interactions over processes and tools',
+        ja: 'プロセスやツールよりも個人と対話を'
+    },
+    {
+        en: 'Working software over comprehensive documentation',
+        ja: '包括的なドキュメントよりも動くソフトウェアを'
+    },
+    {
+        en: 'Customer collaboration over contract negotiation',
+        ja: '契約交渉よりも顧客との協調を'
+    },
+    {
+        en: 'Responding to change over following a plan',
+        ja: '計画に従うことよりも変化への対応を'
+    }
 ];
+const langValidator = (inputLang) => {
+    return !!supportedLangs.find(supportedLang => supportedLang === inputLang);
+};
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const passage = docs[Math.floor(Math.random() * docs.length)];
+            const inputLang = core.getInput('lang');
+            if (!langValidator(inputLang)) {
+                core.setFailed(`Unsupported language: ${inputLang}.
+Supported languages are: ${supportedLangs.map(l => {
+                    return l;
+                })}`);
+                return;
+            }
+            const passage = docs[Math.floor(Math.random() * docs.length)][inputLang];
             core.info(passage);
             core.setOutput('passage', passage);
         }

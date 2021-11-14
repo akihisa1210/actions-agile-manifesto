@@ -1,6 +1,10 @@
 name: 'Post Agile Manifesto'
 description: 'A GitHub Action to post a passage from "Manifesto for Agile Software Development" (or other document) in the comments of a pull request.'
 author: 'akihisa1210'
+inputs:
+  lang:
+    description: 'language of passage'
+    default: 'en'
 runs:
   using: 'node12'
   main: 'dist/index.js'
