@@ -1,11 +1,6 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
-inputs:
-  milliseconds: # change this
-    required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+name: 'Post Agile Manifesto'
+description: 'A GitHub Action to post a passage from "Manifesto for Agile Software Development" (or other document) in the comments of a pull request.'
+author: 'akihisa1210'
 runs:
   using: 'node12'
   main: 'dist/index.js'
