@@ -1,7 +1,9 @@
 import * as core from '@actions/core'
 
+const supportedLangs = ['en', 'ja'] as const
+
 type Doc = {
-  [index: string]: string
+  [key in typeof supportedLangs[number]]: string
 }
 
 const docs: Doc[] = [
@@ -23,21 +25,26 @@ const docs: Doc[] = [
   }
 ]
 
-const supportedLangs = ['en', 'ja']
+const langValidator = (
+  inputLang: string
+): inputLang is typeof supportedLangs[number] => {
+  return !!supportedLangs.find(supportedLang => supportedLang === inputLang)
+}
 
 async function run(): Promise<void> {
   try {
-    const lang: string = core.getInput('lang')
-    if (!supportedLangs.includes(lang)) {
+    const inputLang: string = core.getInput('lang')
+    if (!langValidator(inputLang)) {
       core.setFailed(
-        `Unsupported language: ${lang}.
+        `Unsupported language: ${inputLang}.
 Supported languages are: ${supportedLangs.map(l => {
           return l
         })}`
       )
+      return
     }
 
-    const passage = docs[Math.floor(Math.random() * docs.length)][lang]
+    const passage = docs[Math.floor(Math.random() * docs.length)][inputLang]
     core.info(passage)
     core.setOutput('passage', passage)
   } catch (error) {

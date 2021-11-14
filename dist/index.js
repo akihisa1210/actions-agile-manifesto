@@ -36,6 +36,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(186));
+const supportedLangs = ['en', 'ja'];
 const docs = [
     {
         en: 'Individuals and interactions over processes and tools',
@@ -54,20 +55,23 @@ const docs = [
         ja: '計画に従うことよりも変化への対応を'
     }
 ];
-const supportedLangs = ['en', 'ja'];
+const langValidator = (inputLang) => {
+    return !!supportedLangs.find(supportedLang => supportedLang === inputLang);
+};
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const lang = core.getInput('lang');
-            if (!supportedLangs.includes(lang)) {
-                core.setFailed(`Unsupported language: ${lang}.
+            const inputLang = core.getInput('lang');
+            if (!langValidator(inputLang)) {
+                core.setFailed(`Unsupported language: ${inputLang}.
 Supported languages are: ${supportedLangs.map(l => {
                     return l;
                 })}`);
+                return;
             }
-            const passage = docs[Math.floor(Math.random() * docs.length)];
-            core.info(passage[lang]);
-            core.setOutput('passage', passage[lang]);
+            const passage = docs[Math.floor(Math.random() * docs.length)][inputLang];
+            core.info(passage);
+            core.setOutput('passage', passage);
         }
         catch (error) {
             if (error instanceof Error)
