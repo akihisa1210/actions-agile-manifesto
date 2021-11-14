@@ -5,6 +5,9 @@ inputs:
   lang:
     description: 'language of passage'
     default: 'en'
+  repo-token:
+    description: 'GITHUB_TOKEN for post comment'
+    required: true
 runs:
   using: 'node12'
   main: 'dist/index.js'
