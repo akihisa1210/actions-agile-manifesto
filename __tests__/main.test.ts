@@ -1,25 +1,47 @@
+import {run} from '../src/run'
 import * as process from 'process'
-import * as cp from 'child_process'
-import * as path from 'path'
-import {expect, test} from '@jest/globals'
+import {beforeEach, test} from '@jest/globals'
+import * as github from '@actions/github'
+import nock from 'nock'
 
-// shows how the runner will run a javascript action with env / stdout protocol
+beforeEach(() => {
+  github.context.payload = {
+    pull_request: {
+      number: 1
+    }
+  }
+})
+
+test('No pull request', () => {
+  github.context.payload = {}
+  process.env['INPUT_LANG'] = 'en'
+  run()
+})
+
 test('test runs (lang: en)', () => {
   process.env['INPUT_LANG'] = 'en'
-  const np = process.execPath
-  const ip = path.join(__dirname, '..', 'lib', 'main.js')
-  const options: cp.ExecFileSyncOptions = {
-    env: process.env
-  }
-  console.log(cp.execFileSync(np, [ip], options).toString())
+  process.env['INPUT_REPO-TOKEN'] = 'dummy-token'
+  process.env['GITHUB_REPOSITORY'] = 'testowner/testrepo'
+
+  nock('https://api.github.com')
+    .post('/repos/testowner/testrepo/issues/1/comments')
+    .reply(200, {
+      html_url: 'https://github.com/testowner/testrepo/issues/1#issuecomment-1'
+    })
+
+  run()
 })
 
 test('test runs (lang: ja)', () => {
   process.env['INPUT_LANG'] = 'ja'
-  const np = process.execPath
-  const ip = path.join(__dirname, '..', 'lib', 'main.js')
-  const options: cp.ExecFileSyncOptions = {
-    env: process.env
-  }
-  console.log(cp.execFileSync(np, [ip], options).toString())
+  process.env['INPUT_REPO-TOKEN'] = 'dummy-token'
+  process.env['GITHUB_REPOSITORY'] = 'testowner/testrepo'
+
+  nock('https://api.github.com')
+    .post('/repos/testowner/testrepo/issues/1/comments')
+    .reply(200, {
+      html_url: 'https://github.com/testowner/testrepo/issues/1#issuecomment-1'
+    })
+
+  run()
 })
