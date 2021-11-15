@@ -34,7 +34,7 @@ exports.passageSelector = passageSelector;
 const langValidator = (inputLang) => {
     if (!supportedLangs.find(supportedLang => supportedLang === inputLang)) {
         throw new Error(`Unsupported language: ${inputLang}.
-    Supported languages are: ${supportedLangs.map(l => {
+Supported languages are: ${supportedLangs.map(l => {
             return l;
         })}`);
     }

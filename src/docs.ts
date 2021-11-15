@@ -1,6 +1,6 @@
 const supportedLangs = ['en', 'ja'] as const
 
-type Doc = {
+export type Doc = {
   [key in typeof supportedLangs[number]]: string
 }
 
@@ -35,7 +35,7 @@ export const langValidator = (
 ): inputLang is typeof supportedLangs[number] => {
   if (!supportedLangs.find(supportedLang => supportedLang === inputLang)) {
     throw new Error(`Unsupported language: ${inputLang}.
-    Supported languages are: ${supportedLangs.map(l => {
+Supported languages are: ${supportedLangs.map(l => {
       return l
     })}`)
   }
