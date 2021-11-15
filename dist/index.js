@@ -1,6 +1,50 @@
 require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 9713:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.langValidator = exports.passageSelector = void 0;
+const supportedLangs = ['en', 'ja'];
+const agileManifesto = [
+    {
+        en: 'Individuals and interactions over processes and tools',
+        ja: 'プロセスやツールよりも個人と対話を'
+    },
+    {
+        en: 'Working software over comprehensive documentation',
+        ja: '包括的なドキュメントよりも動くソフトウェアを'
+    },
+    {
+        en: 'Customer collaboration over contract negotiation',
+        ja: '契約交渉よりも顧客との協調を'
+    },
+    {
+        en: 'Responding to change over following a plan',
+        ja: '計画に従うことよりも変化への対応を'
+    }
+];
+const passageSelector = (lang, docs = agileManifesto) => {
+    return docs[Math.floor(Math.random() * docs.length)][lang];
+};
+exports.passageSelector = passageSelector;
+const langValidator = (inputLang) => {
+    if (!supportedLangs.find(supportedLang => supportedLang === inputLang)) {
+        throw new Error(`Unsupported language: ${inputLang}.
+    Supported languages are: ${supportedLangs.map(l => {
+            return l;
+        })}`);
+    }
+    return true;
+};
+exports.langValidator = langValidator;
+
+
+/***/ }),
+
 /***/ 7884:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -38,40 +82,15 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.run = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
-const supportedLangs = ['en', 'ja'];
-const docs = [
-    {
-        en: 'Individuals and interactions over processes and tools',
-        ja: 'プロセスやツールよりも個人と対話を'
-    },
-    {
-        en: 'Working software over comprehensive documentation',
-        ja: '包括的なドキュメントよりも動くソフトウェアを'
-    },
-    {
-        en: 'Customer collaboration over contract negotiation',
-        ja: '契約交渉よりも顧客との協調を'
-    },
-    {
-        en: 'Responding to change over following a plan',
-        ja: '計画に従うことよりも変化への対応を'
-    }
-];
-const langValidator = (inputLang) => {
-    return !!supportedLangs.find(supportedLang => supportedLang === inputLang);
-};
+const docs_1 = __nccwpck_require__(9713);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const inputLang = core.getInput('lang');
-            if (!langValidator(inputLang)) {
-                core.setFailed(`Unsupported language: ${inputLang}.
-Supported languages are: ${supportedLangs.map(l => {
-                    return l;
-                })}`);
+            if (!(0, docs_1.langValidator)(inputLang)) {
                 return;
             }
-            const passage = docs[Math.floor(Math.random() * docs.length)][inputLang];
+            const passage = (0, docs_1.passageSelector)(inputLang);
             core.info(passage);
             core.setOutput('passage', passage);
             const context = github.context;
@@ -89,6 +108,7 @@ Supported languages are: ${supportedLangs.map(l => {
                 body: passage
             });
             core.info(`comment url: ${res.data.html_url}`);
+            core.setOutput('comment-url', res.data.html_url);
         }
         catch (error) {
             if (error instanceof Error)
