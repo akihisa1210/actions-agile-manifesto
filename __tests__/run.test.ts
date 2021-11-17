@@ -4,12 +4,32 @@ import * as github from '@actions/github'
 import {run} from '../src/run'
 import {beforeEach, expect, jest, test} from '@jest/globals'
 import nock from 'nock'
+import {Doc} from '../src/docs'
 
-jest.mock('../src/docs', () => ({
-  __esModule: true,
-  ...(jest.requireActual('../src/docs') as {}),
-  passageSelector: jest.fn().mockReturnValue('test-passage')
-}))
+jest.mock('../src/docs', () => {
+  const testDoc: Doc = {
+    en: {
+      passage: 'test-passage-en',
+      source: {
+        title: 'test-source-title-en',
+        url: 'test-source-url-en'
+      }
+    },
+    ja: {
+      passage: 'test-passage-ja',
+      source: {
+        title: 'test-source-title-ja',
+        url: 'test-source-url-ja'
+      }
+    }
+  }
+
+  return {
+    __esModule: true,
+    ...(jest.requireActual('../src/docs') as {}),
+    passageSelector: jest.fn().mockReturnValue(testDoc)
+  }
+})
 
 beforeEach(() => {
   github.context.payload = {
@@ -28,7 +48,7 @@ test('No pull request', async () => {
   await run()
 
   expect(setOutputMock).toHaveBeenCalledTimes(1)
-  expect(setOutputMock).toHaveBeenCalledWith('passage', 'test-passage')
+  expect(setOutputMock).toHaveBeenCalledWith('passage', 'test-passage-en')
 })
 
 test('test runs (lang: en)', async () => {
@@ -47,7 +67,7 @@ test('test runs (lang: en)', async () => {
   await run()
 
   expect(setOutputMock).toHaveBeenCalledTimes(2)
-  expect(setOutputMock).nthCalledWith(1, 'passage', 'test-passage')
+  expect(setOutputMock).nthCalledWith(1, 'passage', 'test-passage-en')
   expect(setOutputMock).lastCalledWith(
     'comment-url',
     'https://github.com/testowner/testrepo/issues/1#issuecomment-1'
@@ -70,7 +90,7 @@ test('test runs (lang: ja)', async () => {
   await run()
 
   expect(setOutputMock).toHaveBeenCalledTimes(2)
-  expect(setOutputMock).nthCalledWith(1, 'passage', 'test-passage')
+  expect(setOutputMock).nthCalledWith(1, 'passage', 'test-passage-ja')
   expect(setOutputMock).lastCalledWith(
     'comment-url',
     'https://github.com/testowner/testrepo/issues/1#issuecomment-1'

@@ -7,28 +7,76 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.langValidator = exports.passageSelector = void 0;
+exports.commentBuilder = exports.langValidator = exports.passageSelector = void 0;
 const supportedLangs = ['en', 'ja'];
 const agileManifesto = [
     {
-        en: 'Individuals and interactions over processes and tools',
-        ja: 'プロセスやツールよりも個人と対話を'
+        en: {
+            passage: 'Individuals and interactions over processes and tools',
+            source: {
+                title: 'Manifesto for Agile Software Development',
+                url: 'https://agilemanifesto.org/'
+            }
+        },
+        ja: {
+            passage: 'プロセスやツールよりも個人と対話を',
+            source: {
+                title: 'アジャイルソフトウェア開発宣言',
+                url: 'https://agilemanifesto.org/iso/ja/manifesto.html'
+            }
+        }
     },
     {
-        en: 'Working software over comprehensive documentation',
-        ja: '包括的なドキュメントよりも動くソフトウェアを'
+        en: {
+            passage: 'Working software over comprehensive documentation',
+            source: {
+                title: 'Manifesto for Agile Software Development',
+                url: 'https://agilemanifesto.org/'
+            }
+        },
+        ja: {
+            passage: '包括的なドキュメントよりも動くソフトウェアを',
+            source: {
+                title: 'アジャイルソフトウェア開発宣言',
+                url: 'https://agilemanifesto.org/iso/ja/manifesto.html'
+            }
+        }
     },
     {
-        en: 'Customer collaboration over contract negotiation',
-        ja: '契約交渉よりも顧客との協調を'
+        en: {
+            passage: 'Customer collaboration over contract negotiation',
+            source: {
+                title: 'Manifesto for Agile Software Development',
+                url: 'https://agilemanifesto.org/'
+            }
+        },
+        ja: {
+            passage: '契約交渉よりも顧客との協調を',
+            source: {
+                title: 'アジャイルソフトウェア開発宣言',
+                url: 'https://agilemanifesto.org/iso/ja/manifesto.html'
+            }
+        }
     },
     {
-        en: 'Responding to change over following a plan',
-        ja: '計画に従うことよりも変化への対応を'
+        en: {
+            passage: 'Responding to change over following a plan',
+            source: {
+                title: 'Manifesto for Agile Software Development',
+                url: 'https://agilemanifesto.org/'
+            }
+        },
+        ja: {
+            passage: '計画に従うことよりも変化への対応を',
+            source: {
+                title: 'アジャイルソフトウェア開発宣言',
+                url: 'https://agilemanifesto.org/iso/ja/manifesto.html'
+            }
+        }
     }
 ];
-const passageSelector = (lang, docs = agileManifesto) => {
-    return docs[Math.floor(Math.random() * docs.length)][lang];
+const passageSelector = (docs = agileManifesto) => {
+    return docs[Math.floor(Math.random() * docs.length)];
 };
 exports.passageSelector = passageSelector;
 const langValidator = (inputLang) => {
@@ -41,6 +89,13 @@ Supported languages are: ${supportedLangs.map(l => {
     return true;
 };
 exports.langValidator = langValidator;
+const commentBuilder = (lang, doc) => {
+    const passage = doc[lang];
+    return `> ${passage.passage}
+
+from [${passage.source.title}](${passage.source.url})`;
+};
+exports.commentBuilder = commentBuilder;
 
 
 /***/ }),
@@ -90,9 +145,10 @@ function run() {
             if (!(0, docs_1.langValidator)(inputLang)) {
                 return;
             }
-            const passage = (0, docs_1.passageSelector)(inputLang);
-            core.info(passage);
-            core.setOutput('passage', passage);
+            const passage = (0, docs_1.passageSelector)();
+            const comment = (0, docs_1.commentBuilder)(inputLang, passage);
+            core.info(passage[inputLang].passage);
+            core.setOutput('passage', passage[inputLang].passage);
             const context = github.context;
             const pr = context.payload.pull_request;
             if (!pr) {
@@ -105,7 +161,7 @@ function run() {
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: pr.number,
-                body: passage
+                body: comment
             });
             core.info(`comment url: ${res.data.html_url}`);
             core.setOutput('comment-url', res.data.html_url);

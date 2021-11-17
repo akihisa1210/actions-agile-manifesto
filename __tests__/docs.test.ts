@@ -1,16 +1,27 @@
-import {Doc, passageSelector, langValidator} from '../src/docs'
+import {Doc, passageSelector, langValidator, commentBuilder} from '../src/docs'
 import {beforeEach, expect, jest, test} from '@jest/globals'
 
-test('passageSelector with en', () => {
-  const docs: Doc[] = [{en: 'test-en', ja: 'test-ja'}]
-  const result = passageSelector('en', docs)
-  expect(result).toEqual('test-en')
-})
+const testDoc: Doc = {
+  en: {
+    passage: 'test-passage-en',
+    source: {
+      title: 'test-source-title-en',
+      url: 'test-source-url-en'
+    }
+  },
+  ja: {
+    passage: 'test-passage-ja',
+    source: {
+      title: 'test-source-title-ja',
+      url: 'test-source-url-ja'
+    }
+  }
+}
 
-test('passageSelector with ja', () => {
-  const docs: Doc[] = [{en: 'test-en', ja: 'test-ja'}]
-  const result = passageSelector('ja', docs)
-  expect(result).toEqual('test-ja')
+test('passageSelector', () => {
+  const docs = [testDoc]
+  const result = passageSelector(docs)
+  expect(result).toEqual(testDoc)
 })
 
 test('langValidator with supported lang', () => {
@@ -22,4 +33,27 @@ test('langValidator with unsupported lang', () => {
   expect(() => langValidator('unsupported-lang'))
     .toThrow(`Unsupported language: unsupported-lang.
 Supported languages are: en,ja`)
+})
+
+test('commentBuilder', () => {
+  const doc: Doc = {
+    en: {
+      passage: 'test-passage-en',
+      source: {
+        title: 'test-source-title-en',
+        url: 'test-source-url-en'
+      }
+    },
+    ja: {
+      passage: 'test-passage-ja',
+      source: {
+        title: 'test-source-title-ja',
+        url: 'test-source-url-ja'
+      }
+    }
+  }
+  const result = commentBuilder('en', doc)
+  expect(result).toEqual(`> test-passage-en
+
+from [test-source-title-en](test-source-url-en)`)
 })
