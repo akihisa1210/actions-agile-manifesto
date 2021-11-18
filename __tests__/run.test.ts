@@ -51,8 +51,8 @@ test('No pull request', async () => {
   expect(setOutputMock).toHaveBeenCalledWith('passage', 'test-passage-en')
 })
 
-test('test runs (lang: en)', async () => {
-  process.env['INPUT_LANG'] = 'en'
+test.each(['en', 'ja'])('test runs (lang: %s)', async inputLang => {
+  process.env['INPUT_LANG'] = inputLang
   process.env['INPUT_REPO-TOKEN'] = 'dummy-token'
   process.env['GITHUB_REPOSITORY'] = 'testowner/testrepo'
 
@@ -67,30 +67,7 @@ test('test runs (lang: en)', async () => {
   await run()
 
   expect(setOutputMock).toHaveBeenCalledTimes(2)
-  expect(setOutputMock).nthCalledWith(1, 'passage', 'test-passage-en')
-  expect(setOutputMock).lastCalledWith(
-    'comment-url',
-    'https://github.com/testowner/testrepo/issues/1#issuecomment-1'
-  )
-})
-
-test('test runs (lang: ja)', async () => {
-  process.env['INPUT_LANG'] = 'ja'
-  process.env['INPUT_REPO-TOKEN'] = 'dummy-token'
-  process.env['GITHUB_REPOSITORY'] = 'testowner/testrepo'
-
-  nock('https://api.github.com')
-    .post('/repos/testowner/testrepo/issues/1/comments')
-    .reply(200, {
-      html_url: 'https://github.com/testowner/testrepo/issues/1#issuecomment-1'
-    })
-
-  const setOutputMock = jest.spyOn(core, 'setOutput')
-
-  await run()
-
-  expect(setOutputMock).toHaveBeenCalledTimes(2)
-  expect(setOutputMock).nthCalledWith(1, 'passage', 'test-passage-ja')
+  expect(setOutputMock).nthCalledWith(1, 'passage', `test-passage-${inputLang}`)
   expect(setOutputMock).lastCalledWith(
     'comment-url',
     'https://github.com/testowner/testrepo/issues/1#issuecomment-1'

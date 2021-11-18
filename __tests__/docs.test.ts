@@ -41,23 +41,7 @@ Supported languages are: en,ja`)
 })
 
 test('commentBuilder', () => {
-  const passage: Passage = {
-    en: {
-      text: 'test-passage-en',
-      source: {
-        title: 'test-source-title-en',
-        url: 'test-source-url-en'
-      }
-    },
-    ja: {
-      text: 'test-passage-ja',
-      source: {
-        title: 'test-source-title-ja',
-        url: 'test-source-url-ja'
-      }
-    }
-  }
-  const result = commentBuilder('en', passage)
+  const result = commentBuilder('en', testPassage)
   expect(result).toEqual(`> test-passage-en
 
 from [test-source-title-en](test-source-url-en)`)
