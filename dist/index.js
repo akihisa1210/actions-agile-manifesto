@@ -1,7 +1,7 @@
 require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 9713:
+/***/ 6634:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -12,14 +12,14 @@ const supportedLangs = ['en', 'ja'];
 const agileManifesto = [
     {
         en: {
-            passage: 'Individuals and interactions over processes and tools',
+            text: 'Individuals and interactions over processes and tools',
             source: {
                 title: 'Manifesto for Agile Software Development',
                 url: 'https://agilemanifesto.org/'
             }
         },
         ja: {
-            passage: 'プロセスやツールよりも個人と対話を',
+            text: 'プロセスやツールよりも個人と対話を',
             source: {
                 title: 'アジャイルソフトウェア開発宣言',
                 url: 'https://agilemanifesto.org/iso/ja/manifesto.html'
@@ -28,14 +28,14 @@ const agileManifesto = [
     },
     {
         en: {
-            passage: 'Working software over comprehensive documentation',
+            text: 'Working software over comprehensive documentation',
             source: {
                 title: 'Manifesto for Agile Software Development',
                 url: 'https://agilemanifesto.org/'
             }
         },
         ja: {
-            passage: '包括的なドキュメントよりも動くソフトウェアを',
+            text: '包括的なドキュメントよりも動くソフトウェアを',
             source: {
                 title: 'アジャイルソフトウェア開発宣言',
                 url: 'https://agilemanifesto.org/iso/ja/manifesto.html'
@@ -44,14 +44,14 @@ const agileManifesto = [
     },
     {
         en: {
-            passage: 'Customer collaboration over contract negotiation',
+            text: 'Customer collaboration over contract negotiation',
             source: {
                 title: 'Manifesto for Agile Software Development',
                 url: 'https://agilemanifesto.org/'
             }
         },
         ja: {
-            passage: '契約交渉よりも顧客との協調を',
+            text: '契約交渉よりも顧客との協調を',
             source: {
                 title: 'アジャイルソフトウェア開発宣言',
                 url: 'https://agilemanifesto.org/iso/ja/manifesto.html'
@@ -60,14 +60,14 @@ const agileManifesto = [
     },
     {
         en: {
-            passage: 'Responding to change over following a plan',
+            text: 'Responding to change over following a plan',
             source: {
                 title: 'Manifesto for Agile Software Development',
                 url: 'https://agilemanifesto.org/'
             }
         },
         ja: {
-            passage: '計画に従うことよりも変化への対応を',
+            text: '計画に従うことよりも変化への対応を',
             source: {
                 title: 'アジャイルソフトウェア開発宣言',
                 url: 'https://agilemanifesto.org/iso/ja/manifesto.html'
@@ -75,8 +75,8 @@ const agileManifesto = [
         }
     }
 ];
-const passageSelector = (docs = agileManifesto) => {
-    return docs[Math.floor(Math.random() * docs.length)];
+const passageSelector = (passages = agileManifesto) => {
+    return passages[Math.floor(Math.random() * passages.length)];
 };
 exports.passageSelector = passageSelector;
 const langValidator = (inputLang) => {
@@ -89,11 +89,11 @@ Supported languages are: ${supportedLangs.map(l => {
     return true;
 };
 exports.langValidator = langValidator;
-const commentBuilder = (lang, doc) => {
-    const passage = doc[lang];
-    return `> ${passage.passage}
+const commentBuilder = (lang, passage) => {
+    const passageInLang = passage[lang];
+    return `> ${passageInLang.text}
 
-from [${passage.source.title}](${passage.source.url})`;
+from [${passageInLang.source.title}](${passageInLang.source.url})`;
 };
 exports.commentBuilder = commentBuilder;
 
@@ -137,18 +137,18 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.run = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
-const docs_1 = __nccwpck_require__(9713);
+const passage_1 = __nccwpck_require__(6634);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const inputLang = core.getInput('lang');
-            if (!(0, docs_1.langValidator)(inputLang)) {
+            if (!(0, passage_1.langValidator)(inputLang)) {
                 return;
             }
-            const passage = (0, docs_1.passageSelector)();
-            const comment = (0, docs_1.commentBuilder)(inputLang, passage);
-            core.info(passage[inputLang].passage);
-            core.setOutput('passage', passage[inputLang].passage);
+            const passage = (0, passage_1.passageSelector)();
+            const comment = (0, passage_1.commentBuilder)(inputLang, passage);
+            core.info(passage[inputLang].text);
+            core.setOutput('passage', passage[inputLang].text);
             const context = github.context;
             const pr = context.payload.pull_request;
             if (!pr) {

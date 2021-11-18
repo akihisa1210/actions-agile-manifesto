@@ -4,19 +4,19 @@ import * as github from '@actions/github'
 import {run} from '../src/run'
 import {beforeEach, expect, jest, test} from '@jest/globals'
 import nock from 'nock'
-import {Doc} from '../src/docs'
+import {Passage} from '../src/passage'
 
-jest.mock('../src/docs', () => {
-  const testDoc: Doc = {
+jest.mock('../src/passage', () => {
+  const testPassage: Passage = {
     en: {
-      passage: 'test-passage-en',
+      text: 'test-passage-en',
       source: {
         title: 'test-source-title-en',
         url: 'test-source-url-en'
       }
     },
     ja: {
-      passage: 'test-passage-ja',
+      text: 'test-passage-ja',
       source: {
         title: 'test-source-title-ja',
         url: 'test-source-url-ja'
@@ -26,8 +26,8 @@ jest.mock('../src/docs', () => {
 
   return {
     __esModule: true,
-    ...(jest.requireActual('../src/docs') as {}),
-    passageSelector: jest.fn().mockReturnValue(testDoc)
+    ...(jest.requireActual('../src/passage') as {}),
+    passageSelector: jest.fn().mockReturnValue(testPassage)
   }
 })
 

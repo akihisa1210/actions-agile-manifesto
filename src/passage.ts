@@ -1,8 +1,8 @@
 const supportedLangs = ['en', 'ja'] as const
 
-export type Doc = {
+export type Passage = {
   [key in typeof supportedLangs[number]]: {
-    passage: string
+    text: string
     source: {
       title: string
       url: string
@@ -10,17 +10,17 @@ export type Doc = {
   }
 }
 
-const agileManifesto: Doc[] = [
+const agileManifesto: Passage[] = [
   {
     en: {
-      passage: 'Individuals and interactions over processes and tools',
+      text: 'Individuals and interactions over processes and tools',
       source: {
         title: 'Manifesto for Agile Software Development',
         url: 'https://agilemanifesto.org/'
       }
     },
     ja: {
-      passage: 'プロセスやツールよりも個人と対話を',
+      text: 'プロセスやツールよりも個人と対話を',
       source: {
         title: 'アジャイルソフトウェア開発宣言',
         url: 'https://agilemanifesto.org/iso/ja/manifesto.html'
@@ -29,14 +29,14 @@ const agileManifesto: Doc[] = [
   },
   {
     en: {
-      passage: 'Working software over comprehensive documentation',
+      text: 'Working software over comprehensive documentation',
       source: {
         title: 'Manifesto for Agile Software Development',
         url: 'https://agilemanifesto.org/'
       }
     },
     ja: {
-      passage: '包括的なドキュメントよりも動くソフトウェアを',
+      text: '包括的なドキュメントよりも動くソフトウェアを',
       source: {
         title: 'アジャイルソフトウェア開発宣言',
         url: 'https://agilemanifesto.org/iso/ja/manifesto.html'
@@ -45,14 +45,14 @@ const agileManifesto: Doc[] = [
   },
   {
     en: {
-      passage: 'Customer collaboration over contract negotiation',
+      text: 'Customer collaboration over contract negotiation',
       source: {
         title: 'Manifesto for Agile Software Development',
         url: 'https://agilemanifesto.org/'
       }
     },
     ja: {
-      passage: '契約交渉よりも顧客との協調を',
+      text: '契約交渉よりも顧客との協調を',
       source: {
         title: 'アジャイルソフトウェア開発宣言',
         url: 'https://agilemanifesto.org/iso/ja/manifesto.html'
@@ -61,14 +61,14 @@ const agileManifesto: Doc[] = [
   },
   {
     en: {
-      passage: 'Responding to change over following a plan',
+      text: 'Responding to change over following a plan',
       source: {
         title: 'Manifesto for Agile Software Development',
         url: 'https://agilemanifesto.org/'
       }
     },
     ja: {
-      passage: '計画に従うことよりも変化への対応を',
+      text: '計画に従うことよりも変化への対応を',
       source: {
         title: 'アジャイルソフトウェア開発宣言',
         url: 'https://agilemanifesto.org/iso/ja/manifesto.html'
@@ -77,8 +77,10 @@ const agileManifesto: Doc[] = [
   }
 ]
 
-export const passageSelector = (docs: Doc[] = agileManifesto): Doc => {
-  return docs[Math.floor(Math.random() * docs.length)]
+export const passageSelector = (
+  passages: Passage[] = agileManifesto
+): Passage => {
+  return passages[Math.floor(Math.random() * passages.length)]
 }
 
 export const langValidator = (
@@ -95,10 +97,10 @@ Supported languages are: ${supportedLangs.map(l => {
 
 export const commentBuilder = (
   lang: typeof supportedLangs[number],
-  doc: Doc
+  passage: Passage
 ): string => {
-  const passage = doc[lang]
-  return `> ${passage.passage}
+  const passageInLang = passage[lang]
+  return `> ${passageInLang.text}
 
-from [${passage.source.title}](${passage.source.url})`
+from [${passageInLang.source.title}](${passageInLang.source.url})`
 }

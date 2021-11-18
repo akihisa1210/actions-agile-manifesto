@@ -1,16 +1,21 @@
-import {Doc, passageSelector, langValidator, commentBuilder} from '../src/docs'
+import {
+  Passage,
+  passageSelector,
+  langValidator,
+  commentBuilder
+} from '../src/passage'
 import {beforeEach, expect, jest, test} from '@jest/globals'
 
-const testDoc: Doc = {
+const testPassage: Passage = {
   en: {
-    passage: 'test-passage-en',
+    text: 'test-passage-en',
     source: {
       title: 'test-source-title-en',
       url: 'test-source-url-en'
     }
   },
   ja: {
-    passage: 'test-passage-ja',
+    text: 'test-passage-ja',
     source: {
       title: 'test-source-title-ja',
       url: 'test-source-url-ja'
@@ -19,9 +24,9 @@ const testDoc: Doc = {
 }
 
 test('passageSelector', () => {
-  const docs = [testDoc]
-  const result = passageSelector(docs)
-  expect(result).toEqual(testDoc)
+  const passages = [testPassage]
+  const result = passageSelector(passages)
+  expect(result).toEqual(testPassage)
 })
 
 test('langValidator with supported lang', () => {
@@ -36,23 +41,23 @@ Supported languages are: en,ja`)
 })
 
 test('commentBuilder', () => {
-  const doc: Doc = {
+  const passage: Passage = {
     en: {
-      passage: 'test-passage-en',
+      text: 'test-passage-en',
       source: {
         title: 'test-source-title-en',
         url: 'test-source-url-en'
       }
     },
     ja: {
-      passage: 'test-passage-ja',
+      text: 'test-passage-ja',
       source: {
         title: 'test-source-title-ja',
         url: 'test-source-url-ja'
       }
     }
   }
-  const result = commentBuilder('en', doc)
+  const result = commentBuilder('en', passage)
   expect(result).toEqual(`> test-passage-en
 
 from [test-source-title-en](test-source-url-en)`)

@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-import {commentBuilder, langValidator, passageSelector} from './docs'
+import {commentBuilder, langValidator, passageSelector} from './passage'
 
 export async function run(): Promise<void> {
   try {
@@ -12,8 +12,8 @@ export async function run(): Promise<void> {
     const passage = passageSelector()
     const comment = commentBuilder(inputLang, passage)
 
-    core.info(passage[inputLang].passage)
-    core.setOutput('passage', passage[inputLang].passage)
+    core.info(passage[inputLang].text)
+    core.setOutput('passage', passage[inputLang].text)
 
     const context = github.context
     const pr = context.payload.pull_request
