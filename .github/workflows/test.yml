@@ -20,6 +20,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: ./
+        id: post
         with:
           lang: ja
           repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get the passage
+        run: echo Posted Passage is "${{ steps.post.outputs.passage }}"
